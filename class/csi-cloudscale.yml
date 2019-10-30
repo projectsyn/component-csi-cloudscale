@@ -1,8 +1,8 @@
 parameters:
   kapitan:
     compile:
-      - output_path: cloudscale-csi
+      - output_path: csi-cloudscale
         input_type: jsonnet
         output_type: yaml
         input_paths:
-          - cloudscale-csi/component/main.jsonnet
+          - csi-cloudscale/component/main.jsonnet
