@@ -87,6 +87,7 @@ local secret = kube.Secret('cloudscale') {
     std.parseJson(kap.yaml_load('csi-cloudscale/static/controller/clusterrolebinding-2.yaml')),
     std.parseJson(kap.yaml_load('csi-cloudscale/static/controller/clusterrolebinding-3.yaml'))
   ],
+  "02d_controller_statefulset": std.parseJson(kap.yaml_load('csi-cloudscale/static/controller/statefulset.yaml')),
   "03a_nodeplugin_serviceaccount": std.parseJson(kap.yaml_load('csi-cloudscale/static/nodeplugin/serviceaccount.yaml')),
   "03b_nodeplugin_clusterrole": std.parseJson(kap.yaml_load('csi-cloudscale/static/nodeplugin/clusterrole.yaml')),
   "03c_nodeplugin_clusterrolebinding": std.parseJson(kap.yaml_load('csi-cloudscale/static/nodeplugin/clusterrolebinding.yaml')),
