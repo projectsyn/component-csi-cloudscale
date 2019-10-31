@@ -11,7 +11,7 @@ local storageclass = kube.StorageClass('cloudscale-volume') {
 
 local storageclass_ssd = storageclass {
   metadata+: {
-    name: "cloudscale-volume-ssd",
+    name: "fast",
   },
   parameters: {
     "csi.cloudscale.ch/volume-type": "ssd"
@@ -20,7 +20,7 @@ local storageclass_ssd = storageclass {
 
 local storageclass_bulk = storageclass {
   metadata+: {
-    name: "cloudscale-volume-bulk",
+    name: "bulk",
   },
   parameters: {
     "csi.cloudscale.ch/volume-type": "bulk"
@@ -29,7 +29,7 @@ local storageclass_bulk = storageclass {
 
 local storageclass_ssd_luks = storageclass_ssd {
   metadata+: {
-    name: "cloudscale-volume-ssd-luks",
+    name: "fast-encrypted",
   },
   parameters+: {
     "csi.cloudscale.ch/luks-encrypted": "true",
@@ -42,7 +42,7 @@ local storageclass_ssd_luks = storageclass_ssd {
 
 local storageclass_bulk_luks = storageclass_bulk {
   metadata+: {
-    name: "cloudscale-volume-bulk-luks"
+    name: "bulk-encrypted"
   },
   parameters+: {
     "csi.cloudscale.ch/luks-encrypted": "true",
@@ -64,6 +64,7 @@ local secret = kube.Secret('cloudscale') {
 
 {
   "00_crds": std.parseJson(kap.yaml_load('csi-cloudscale/static/csinodeinfo-crd.yaml')),
+  # TODO set storageclass_ssd_luks as default as soon as secret management is automated
   "01_storageclass": [
     storageclass_ssd {
       metadata+: {
@@ -87,6 +88,7 @@ local secret = kube.Secret('cloudscale') {
     std.parseJson(kap.yaml_load('csi-cloudscale/static/controller/clusterrolebinding-2.yaml')),
     std.parseJson(kap.yaml_load('csi-cloudscale/static/controller/clusterrolebinding-3.yaml'))
   ],
+  "02d_controller_statefulset": std.parseJson(kap.yaml_load('csi-cloudscale/static/controller/statefulset.yaml')),
   "03a_nodeplugin_serviceaccount": std.parseJson(kap.yaml_load('csi-cloudscale/static/nodeplugin/serviceaccount.yaml')),
   "03b_nodeplugin_clusterrole": std.parseJson(kap.yaml_load('csi-cloudscale/static/nodeplugin/clusterrole.yaml')),
   "03c_nodeplugin_clusterrolebinding": std.parseJson(kap.yaml_load('csi-cloudscale/static/nodeplugin/clusterrolebinding.yaml')),
