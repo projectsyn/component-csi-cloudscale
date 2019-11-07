@@ -2,7 +2,7 @@ local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 
-local cloudscale_api_token = inv.parameters.cloud.credentials.token;
+local cloudscale_api_token = inv.parameters.csi_cloudscale.api_token;
 
 # StorageClasses
 local storageclass = kube.StorageClass('cloudscale-volume') {
