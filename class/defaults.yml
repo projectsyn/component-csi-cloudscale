@@ -1,0 +1,3 @@
+parameters:
+  csi_cloudscale:
+    api_token: ?{vaultkv:${customer:name}/${cluster:name}/cloudscale/token}
