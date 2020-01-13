@@ -4,7 +4,7 @@ local inv = kap.inventory();
 local params = inv.parameters.csi_cloudscale;
 local argocd = import 'lib/argocd.libjsonnet';
 
-local app = argocd.App('csi-cloudscale', params.namespace);
+local app = argocd.App('csi-cloudscale', params.namespace, secrets=true);
 
 {
   'csi-cloudscale': app,
