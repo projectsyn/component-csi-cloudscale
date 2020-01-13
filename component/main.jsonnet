@@ -1,6 +1,7 @@
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
+local params = inv.parameters.csi_cloudscale;
 
 local cloudscale_api_token = inv.parameters.csi_cloudscale.api_token;
 
@@ -55,7 +56,7 @@ local storageclass_bulk_luks = storageclass_bulk {
 
 local secret = kube.Secret('cloudscale') {
   metadata+: {
-    namespace: "kube-system"
+    namespace: params.namespace
   },
   stringData: {
     "access-token": cloudscale_api_token
