@@ -63,7 +63,7 @@ local secret = kube.Secret('cloudscale') {
   },
 };
 
-{
+if params.enabled then {
   '00_crds': std.parseJson(kap.yaml_load('csi-cloudscale/static/csinodeinfo-crd.yaml')),
   // TODO set storageclass_ssd_luks as default as soon as secret management is automated
   '01_storageclass': [
@@ -95,4 +95,4 @@ local secret = kube.Secret('cloudscale') {
   '03c_nodeplugin_clusterrolebinding': std.parseJson(kap.yaml_load('csi-cloudscale/static/nodeplugin/clusterrolebinding.yaml')),
   '03d_nodeplugin_daemonset': std.parseJson(kap.yaml_load('csi-cloudscale/static/nodeplugin/daemonset.yaml')),
   '04_secret': secret,
-}
+} else {}
