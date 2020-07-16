@@ -1,11 +1,15 @@
 kind: StatefulSet
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 metadata:
   name: csi-cloudscale-controller
   namespace: kube-system
 spec:
   serviceName: "csi-cloudscale"
   replicas: 1
+  selector:
+    matchLabels:
+      app: csi-cloudscale-controller
+      role: csi-cloudscale
   template:
     metadata:
       labels:
