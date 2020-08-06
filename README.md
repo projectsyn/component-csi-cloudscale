@@ -1,6 +1,6 @@
 # Commodore Component: csi-cloudscale
 
-This is a [Commodore][commodore] Component for csi-cloudscale.
+This is a [Commodore][commodore] Component for [csi-cloudscale](https://github.com/cloudscale-ch/csi-cloudscale).
 
 This repository is part of Project Syn.
 For documentation on Project Syn and this component, see https://syn.tools.
