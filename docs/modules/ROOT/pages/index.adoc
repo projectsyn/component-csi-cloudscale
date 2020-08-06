@@ -1,0 +1,3 @@
+= csi-cloudscale: A Commodore component to manage csi-cloudscale
+
+{doctitle} is a Commodore component for Managing csi-cloudscale.
