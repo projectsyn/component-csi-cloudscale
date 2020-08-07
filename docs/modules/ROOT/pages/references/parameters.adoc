@@ -1,0 +1,32 @@
+= Parameters
+
+The parent key for all of the following parameters is `csi_cloudscale`.
+
+
+== `version`
+
+[horizontal]
+type:: string
+default:: `v1.1.2`
+
+Version of the driver to install.
+See https://github.com/cloudscale-ch/csi-cloudscale/releases[available versions].
+
+
+=== `enabled`
+
+[horizontal]
+type:: boolean
+default:: `true`
+
+Switch to enable or disable the component. See https://github.com/projectsyn/commodore/issues/71[this issue] for further details.
+
+
+=== `api_token`
+
+[horizontal]
+type:: string
+default:: Vault reference
+
+Cloudscale API token to be used by the CSI driver.
+This should be a reference to a secret in Vault instead of the plaintext token.
