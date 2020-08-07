@@ -1,42 +1,21 @@
-# csi-cloudscale
+# Commodore Component: csi-cloudscale
 
-A commodore Component for csi-cloudscale
+This is a [Commodore][commodore] Component for [csi-cloudscale](https://github.com/cloudscale-ch/csi-cloudscale).
 
-## Details
+This repository is part of Project Syn.
+For documentation on Project Syn and this component, see https://syn.tools.
 
-This component installs the [csi-cloudscale](https://github.com/cloudscale-ch/csi-cloudscale)
-driver into the `kube-system` namespace.
+## Documentation
 
-## Encrypted PVs
+Documentation for this component is written using [Asciidoc][asciidoc] and [Antora][antora].
+It is located in the [docs/](docs) folder.
+The [Divio documentation structure](https://documentation.divio.com/) is used to organize its content.
 
-To use encrypted PVs the provided StorageClasses `fast-encrypted` and `bulk-encrypted` can be used.
-A secret in the same namespace as the PVC must exist and can be created as follows:
+## Contributing and license
 
-```
-kubectl -n $MYNS create secret generic $MYPVCNAME-luks-key --from-literal=luksKey=$(pwgen 32 1)
-```
+This library is licensed under [BSD-3-Clause](LICENSE).
+For information about how to contribute see [CONTRIBUTING](CONTRIBUTING.md).
 
-This automatically creates LUKS encrypted volumes. On the node where the PV is mounted, the following
-commands can be used to check for these volumes:
-
-```
-dmsetup ls --target crypt
-lsblk --fs
-cryptsetup -v status
-```
-
-Example:
-```
-root@synfra3:~# cryptsetup -v status pvc-2c062ec1-3b9e-499c-915f-6810d646ea82
-/dev/mapper/pvc-2c062ec1-3b9e-499c-915f-6810d646ea82 is active and is in use.
-  type:    LUKS1
-  cipher:  aes-xts-plain64
-  keysize: 512 bits
-  key location: dm-crypt
-  device:  /dev/vdb
-  sector size:  512
-  offset:  4096 sectors
-  size:    10481664 sectors
-  mode:    read/write
-Command successful.
-```
+[commodore]: https://docs.syn.tools/commodore/index.html
+[asciidoc]: https://asciidoctor.org/
+[antora]: https://antora.org/

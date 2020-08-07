@@ -1,0 +1,3 @@
+= csi-cloudscale: A Commodore component to manage the cloudscale.ch CSI driver
+
+{doctitle} is a Commodore component for managing the cloudscale.ch CSI driver.

@@ -1,12 +1,11 @@
 parameters:
   kapitan:
     compile:
-    - input_paths:
-        - csi-cloudscale/component/app.jsonnet
-      input_type: jsonnet
-      output_path: apps/
-    - output_path: csi-cloudscale
-      input_type: jsonnet
-      output_type: yaml
-      input_paths:
-        - csi-cloudscale/component/main.jsonnet
+      - input_paths:
+          - csi-cloudscale/component/app.jsonnet
+        input_type: jsonnet
+        output_path: apps/
+      - input_paths:
+          - csi-cloudscale/component/main.jsonnet
+        input_type: jsonnet
+        output_path: csi-cloudscale/
