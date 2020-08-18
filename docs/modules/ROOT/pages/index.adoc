@@ -1,3 +1,37 @@
 = csi-cloudscale: A Commodore component to manage the cloudscale.ch CSI driver
 
-{doctitle} is a Commodore component for managing the cloudscale.ch CSI driver.
+{doctitle} is a Commodore component for managing the https://github.com/cloudscale-ch/csi-cloudscale[cloudscale.ch CSI driver].
+
+See the xref:references/parameters.adoc[parameters] reference for further details.
+
+
+== StorageClasses
+
+The following storage classess are set up by this component:
+
+[cols="2,2a,2"]
+|===
+|Name |Type |Encryption
+
+|`ssd` footnote:[Default StorageClass]
+|SSD storage
+|None
+
+|`bulk`
+|Bulk storage (HDD)
+|None
+
+|`ssd-encrypted`
+|SSD storage
+|LUKS
+
+|`bulk-encrypted`
+|Bulk storage (HDD)
+|LUKS
+
+|===
+
+=== Encrypted Storage
+
+To use the `-encrypted` storage classes, a secret with a name of `${pvc-name}-luks-key` and a key `luksKey` needs to exist for each PVC.
+This key is used to encrypt the disk with https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup[LUKS].

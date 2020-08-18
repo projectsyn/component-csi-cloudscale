@@ -1,5 +1,9 @@
 parameters:
   kapitan:
+    dependencies:
+      - type: https
+        source: https://raw.githubusercontent.com/cloudscale-ch/csi-cloudscale/master/deploy/kubernetes/releases/csi-cloudscale-${csi_cloudscale:version}.yaml
+        output_path: dependencies/csi-cloudscale/manifests/${csi_cloudscale:version}/deploy.yaml
     compile:
       - input_paths:
           - csi-cloudscale/component/app.jsonnet

@@ -1,8 +1,9 @@
 parameters:
   csi_cloudscale:
-    # This swtich is required to selectively disable the commoponent
-    # TODO Reevaluate the need for this once disabeling got implemented.
-    # See: https://github.com/projectsyn/commodore/issues/71.
+    namespace: syn-csi-cloudscale
+    version: v1.1.2
+    # This switch is required to selectively disable the commoponent
+    # TODO: Reevaluate the need for this once disabeling got implemented.
+    # See: https://github.com/projectsyn/commodore/issues/71
     enabled: true
-    namespace: kube-system
     api_token: ?{vaultkv:${customer:name}/${cluster:name}/cloudscale/token}
