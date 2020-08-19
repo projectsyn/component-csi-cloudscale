@@ -66,7 +66,7 @@ local customRBAC = if isOpenshift then [
 ] else [];
 
 {
-  '00_namespace': kube.Namespace(params.namespace) + if isOpenshift then {
+  [if params.namespace != 'kube-system' then '00_namespace']: kube.Namespace(params.namespace) + if isOpenshift then {
     metadata+: {
       annotations+: {
         'openshift.io/node-selector': '',

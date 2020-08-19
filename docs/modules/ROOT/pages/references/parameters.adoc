@@ -2,6 +2,22 @@
 
 The parent key for all of the following parameters is `csi_cloudscale`.
 
+== `namespace`
+
+[horizontal]
+type:: string
+default:: `syn-csi-cloudscale`
+
+The namespace in which to install the driver.
+Unless `kube-system` is chosen, the component will take ownership of the
+namespace.
+In K8s prior to 1.17, the driver will not run in namespaces other than
+`kube-system`, as the priority class `system-cluster-critical` is only
+available to pods in namespace `kube-system`.
+See
+https://kubernetes.io/docs/concepts/policy/resource-quotas/#limit-priority-class-consumption-by-default[the
+Kubernetes priority class consumption] documentation for instructions on how
+to allow the driver to run in a namespace other than `kube-system`.
 
 == `version`
 
