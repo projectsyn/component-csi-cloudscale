@@ -1,7 +1,7 @@
 parameters:
   csi_cloudscale:
     namespace: syn-csi-cloudscale
-    version: v1.1.2
+    version: v1.3.0
     # This switch is required to selectively disable the commoponent
     # TODO: Reevaluate the need for this once disabeling got implemented.
     # See: https://github.com/projectsyn/commodore/issues/71
