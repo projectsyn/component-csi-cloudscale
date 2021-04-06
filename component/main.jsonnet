@@ -4,14 +4,14 @@ local sc = import 'lib/storageclass.libsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.csi_cloudscale;
 
-local isOpenshift = std.startsWith(inv.parameters.cluster.dist, 'openshift');
+local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
 
 local config = {
   allowVolumeExpansion: true,
   provisioner: 'ch.cloudscale.csi',
 };
 
-local storageclasses = [[
+local storageclasses = [ [
   sc.storageClass(type) {
     parameters: {
       'csi.cloudscale.ch/volume-type': type,
@@ -27,7 +27,7 @@ local storageclasses = [[
       'csi.storage.k8s.io/node-stage-secret-name': '${pvc.name}-luks-key',
     },
   } + config,
-] for type in ['ssd', 'bulk']];
+] for type in [ 'ssd', 'bulk' ] ];
 
 local secret = kube.Secret('cloudscale') {
   metadata+: {
@@ -45,23 +45,23 @@ local manifests = std.parseJson(
 local customRBAC = if isOpenshift then [
   kube.RoleBinding('csi-hostnetwork') {
     roleRef_: kube.ClusterRole('system:openshift:scc:hostnetwork'),
-    subjects: [{
+    subjects: [ {
       kind: 'ServiceAccount',
       name: std.filter(
         function(obj) obj.kind == 'StatefulSet', manifests
       )[0].spec.template.spec.serviceAccount,
       namespace: params.namespace,
-    }],
+    } ],
   },
   kube.RoleBinding('csi-privileged') {
     roleRef_: kube.ClusterRole('system:openshift:scc:privileged'),
-    subjects: [{
+    subjects: [ {
       kind: 'ServiceAccount',
       name: std.filter(
         function(obj) obj.kind == 'DaemonSet', manifests
       )[0].spec.template.spec.serviceAccount,
       namespace: params.namespace,
-    }],
+    } ],
   },
 ] else [];
 
@@ -82,7 +82,7 @@ local customRBAC = if isOpenshift then [
       },
     }
     for object in manifests
-    if std.setMember(object.kind, std.set(['StatefulSet', 'ServiceAccount', 'DaemonSet']))
+    if std.setMember(object.kind, std.set([ 'StatefulSet', 'ServiceAccount', 'DaemonSet' ]))
   ],
   '20_rbac': [
     if std.objectHas(object, 'subjects') then object {
@@ -95,7 +95,7 @@ local customRBAC = if isOpenshift then [
     }
     else object
     for object in manifests
-    if std.setMember(object.kind, std.set(['ClusterRole', 'ClusterRoleBinding']))
+    if std.setMember(object.kind, std.set([ 'ClusterRole', 'ClusterRoleBinding' ]))
   ],
   [if std.length(customRBAC) > 0 then '30_custom_rbac']: customRBAC,
 }

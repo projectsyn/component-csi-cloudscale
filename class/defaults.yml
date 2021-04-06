@@ -6,4 +6,4 @@ parameters:
     # TODO: Reevaluate the need for this once disabeling got implemented.
     # See: https://github.com/projectsyn/commodore/issues/71
     enabled: true
-    api_token: ?{vaultkv:${customer:name}/${cluster:name}/cloudscale/token}
+    api_token: ?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/token}
