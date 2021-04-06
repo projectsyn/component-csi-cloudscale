@@ -13,9 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rewrite component to use dependencies ([#3])
 - Ensure component does not take ownership of namespace `kube-system` ([#4])
 
+### Fixed
+
+- Remove uses of deprecated facts parameters ([#11])
+
 [Unreleased]: https://github.com/projectsyn/component-csi-cloudscale/compare/v1.0.0...HEAD
 [v1.0.0]: https://github.com/projectsyn/component-csi-cloudscale/releases/tag/v1.0.0
 
 [#2]: https://github.com/projectsyn/component-csi-cloudscale/pull/2
 [#3]: https://github.com/projectsyn/component-csi-cloudscale/pull/3
 [#4]: https://github.com/projectsyn/component-csi-cloudscale/pull/4
+[#11]: https://github.com/projectsyn/component-csi-cloudscale/pull/11
