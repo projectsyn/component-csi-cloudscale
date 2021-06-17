@@ -23,7 +23,7 @@ to allow the driver to run in a namespace other than `kube-system`.
 
 [horizontal]
 type:: string
-default:: `v1.3.1`
+default:: `v2.1.0`
 
 Version of the driver to install.
 See https://github.com/cloudscale-ch/csi-cloudscale/releases[available versions].
