@@ -8,7 +8,7 @@ local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift
 
 local config = {
   allowVolumeExpansion: true,
-  provisioner: 'ch.cloudscale.csi',
+  provisioner: 'csi.cloudscale.ch',
 };
 
 local storageclasses = [ [
