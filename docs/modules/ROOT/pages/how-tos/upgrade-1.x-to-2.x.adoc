@@ -13,11 +13,11 @@ Requirements
 == Step-by-step guide
 
 The essential part of the upgrade is the renaming of the provisioner name from `ch.cloudscale.csi` to `csi.cloudscale.ch`.
-This implies that all `PersistentVolumes` require an changed annotation and all `StorageClasses` need to be recreated with the new provisioner name.
+This implies that all `PersistentVolumes` require a changed annotation and all `StorageClasses` need to be recreated with the new provisioner name.
 
-The upgrade itself does not affect the data path, so no interrupt of IO should be there for applications.
-However, during the upgrade volume changes might not work, so doing that off hours is suggested.
-All steps should be done together.
+The upgrade itself does not affect the data path, so applications should not experience IO interrupts during the upgrade.
+However, during the upgrade, volume provisioning and volume changes might not work for short periods of time, so it's strongly recommended to perform the upgrade during off hours.
+To minimize the visible impact of the upgrade, all steps should be done together.
 
 . Change the provisioner annotation for all volumes from `ch.cloudscale.csi` to `csi.cloudscale.ch`:
 +
