@@ -1,0 +1,60 @@
+= Upgrade from 1.x to 2.x
+
+This guide describes the steps to perform an upgrade of the component from version 1.x to 2.x.
+
+[WARNING]
+====
+Before upgrading to version 2.x, please ensure that your Kubernetes cluster is running the version https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility[1.17 or later].
+====
+
+====
+Requirements
+
+* `commodore`
+* `kubectl`
+* `shell`
+====
+
+== Step-by-step guide
+
+The essential part of the upgrade is the renaming of the provisioner name from `ch.cloudscale.csi` to `csi.cloudscale.ch`.
+This implies that all `PersistentVolumes` require a changed annotation and all `StorageClasses` need to be recreated with the new provisioner name.
+
+The upgrade itself does not affect the data path, so applications should not experience IO interrupts during the upgrade.
+However, during the upgrade, volume provisioning and volume changes might not work for short periods of time, so it's strongly recommended to perform the upgrade during off hours.
+To minimize the visible impact of the upgrade, all steps should be done together.
+
+. Change the provisioner annotation for all volumes from `ch.cloudscale.csi` to `csi.cloudscale.ch`:
++
+[source,bash]
+----
+wget https://raw.githubusercontent.com/cloudscale-ch/csi-cloudscale/master/scripts/fix-annotation.sh
+chmod +x fix-annotation.sh
+./fix-annotation.sh migrate
+rm fix-annotation.sh
+----
++
+. Update the component:
++
+[source,yaml]
+----
+parameters:
+  components:
+    csi-cloudscale:
+      version: v2.0.0
+----
++
+. Compile and push the catalog
++
+. Delete existing csi-cloudscale storage classes
++
+[source,bash]
+----
+oc delete sc bulk bulk-encrypted ssd ssd-encrypted
+----
++
+[NOTE]
+====
+The storageclasses are part of the component and will be recreated using the new parameters.
+Kubernetes does not allow to change the provisioner after creating the object, so the storageclass objects have to be recreated.
+====
