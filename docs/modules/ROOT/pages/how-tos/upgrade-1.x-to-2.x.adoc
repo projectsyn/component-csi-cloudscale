@@ -2,6 +2,11 @@
 
 This guide describes the steps to perform an upgrade of the component from version 1.x to 2.x.
 
+[WARNING]
+====
+Before upgrading to version 2.x, please ensure that your Kubernetes cluster is running the version https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility[1.17 or later].
+====
+
 ====
 Requirements
 
