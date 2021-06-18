@@ -41,7 +41,7 @@ rm fix-annotation.sh
 parameters:
   components:
     csi-cloudscale:
-      version: v2.0.0
+      version: v2.1.0
 ----
 +
 . Compile and push the catalog

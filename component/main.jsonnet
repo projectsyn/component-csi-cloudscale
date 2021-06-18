@@ -14,11 +14,13 @@ local config = {
 local storageclasses = [ [
   sc.storageClass(type) {
     parameters: {
+      fsType: params.fs_type,
       'csi.cloudscale.ch/volume-type': type,
     },
   } + config,
   sc.storageClass(type + '-encrypted') {
     parameters+: {
+      fsType: params.fs_type,
       'csi.cloudscale.ch/volume-type': type,
       'csi.cloudscale.ch/luks-encrypted': 'true',
       'csi.cloudscale.ch/luks-cipher': 'aes-xts-plain64',

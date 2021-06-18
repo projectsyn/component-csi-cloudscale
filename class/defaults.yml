@@ -7,3 +7,4 @@ parameters:
     # See: https://github.com/projectsyn/commodore/issues/71
     enabled: true
     api_token: ?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/token}
+    fs_type: ext4

@@ -41,3 +41,12 @@ default:: Vault reference
 
 Cloudscale API token to be used by the CSI driver.
 This should be a reference to a secret in Vault instead of the plaintext token.
+
+
+=== `fs_type`
+
+[horizontal]
+type:: string
+default:: ext4
+
+The filesystem type used in the storage classes.
