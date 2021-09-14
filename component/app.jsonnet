@@ -5,6 +5,6 @@ local argocd = import 'lib/argocd.libjsonnet';
 
 local app = argocd.App('csi-cloudscale', params.namespace, secrets=true);
 
-if params.enabled then {
+{
   'csi-cloudscale': app,
-} else {}
+}
