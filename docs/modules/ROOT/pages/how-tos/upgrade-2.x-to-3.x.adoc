@@ -1,0 +1,37 @@
+= Upgrade from 2.x to 3.x
+
+This guide describes the steps to perform an upgrade of the component from version 2.x to 3.x.
+
+[WARNING]
+====
+Before upgrading to version 3.x, please ensure that your Kubernetes cluster is running the version https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility[1.17 or later].
+====
+
+====
+Requirements
+
+* `kubectl`
+* `shell`
+====
+
+== Step-by-step guide (Optional)
+
+The node label used by the CSI driver called `region` has been renamed to `csi.cloudscale.ch/zone`.
+If you don't need the `region` label on the specific cluster for an other purpose, you are free to remove them.
+If you keep them, it will stay configued in the node object, but is no longer managed by the CSI driver.
+
+Check the the https://github.com/cloudscale-ch/csi-cloudscale#from-csi-cloudscale-v2x-to-v3x[cloudscale.ch documentation] for more details.
+
+. To remove the no longer used `region` lables on all affected node objects:
++
+[source,bash]
+----
+kubectl label no -l region region-
+----
++
+. Verify there are no more node objects with a `region` label:
++
+[source,bash]
+----
+kubectl get no -l csi.cloudscale.ch/zone
+----
