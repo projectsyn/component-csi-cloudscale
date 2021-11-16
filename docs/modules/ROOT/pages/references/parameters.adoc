@@ -22,6 +22,7 @@ default:: `v3.1.0`
 
 Version of the driver to install.
 See https://github.com/cloudscale-ch/csi-cloudscale/releases[available versions].
+See https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility[Kubernetes compatibility] to choose the right version for your cluster.
 
 
 === `enabled`

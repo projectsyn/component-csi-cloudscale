@@ -5,6 +5,12 @@
 See the xref:references/parameters.adoc[parameters] reference for further details.
 
 
+== Compatibility
+
+Not every version of the cloudscale.ch CSI driver is compatible with every Kubernetes versions.
+See https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility["Kubernetes Compatibility" in csi-cloudscale's README] for more information.
+
+
 == StorageClasses
 
 The following storage classess are set up by this component:
