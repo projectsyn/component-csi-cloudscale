@@ -67,6 +67,29 @@ local customRBAC = if isOpenshift then [
   },
 ] else [];
 
+local inject_tolerations(object) =
+  local tolerations = params.driver_daemonset_tolerations;
+  if (
+    object.kind == 'DaemonSet'
+    && object.metadata.name == 'csi-cloudscale-node'
+  ) then
+    object {
+      spec+: {
+        template+: {
+          spec+: {
+            tolerations+: [
+              tolerations[t] {
+                key: t,
+              }
+              for t in std.objectFields(tolerations)
+            ],
+          },
+        },
+      },
+    }
+  else
+    object;
+
 {
   [if params.namespace != 'kube-system' then '00_namespace']: kube.Namespace(params.namespace) + if isOpenshift then {
     metadata+: {
@@ -78,7 +101,7 @@ local customRBAC = if isOpenshift then [
   '01_storageclasses': std.flattenArrays(storageclasses),
   '02_secret': secret,
   '10_deployments': [
-    object {
+    inject_tolerations(object) {
       metadata+: {
         namespace: params.namespace,
       },
