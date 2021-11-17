@@ -25,7 +25,7 @@ See https://github.com/cloudscale-ch/csi-cloudscale/releases[available versions]
 See https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility[Kubernetes compatibility] to choose the right version for your cluster.
 
 
-=== `enabled`
+== `enabled`
 
 [horizontal]
 type:: boolean
@@ -34,7 +34,7 @@ default:: `true`
 Switch to enable or disable the component. See https://github.com/projectsyn/commodore/issues/71[this issue] for further details.
 
 
-=== `api_token`
+== `api_token`
 
 [horizontal]
 type:: string
