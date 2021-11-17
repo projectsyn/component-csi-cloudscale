@@ -44,10 +44,47 @@ Cloudscale API token to be used by the CSI driver.
 This should be a reference to a secret in Vault instead of the plaintext token.
 
 
-=== `fs_type`
+== `fs_type`
 
 [horizontal]
 type:: string
 default:: ext4
 
 The filesystem type used in the storage classes.
+
+== `driver_daemonset_tolerations`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+Tolerations that should be applied to the CSI node driver daemonset.
+The component will transform entries in the dictionary to valid Kubernetes `tolerations` entries.
+The component will reuse the key in the dictionary as value for field `key` in the `tolerations` entry.
+
+=== Example
+
+Allow the CSI node driver daemonset to be scheduled on nodes which have a `storagenode` taint.
+
+.cluster-id.yaml
+[source,yaml]
+----
+parameters:
+  csi_cloudscale:
+    driver_daemonset_tolerations:
+      storagenode:
+        operator: Exists
+----
+
+.Resulting configuration in the node driver DaemonSet
+[source,yaml]
+----
+# ... remaining object omitted ...
+spec:
+  template:
+    spec:
+      # ... remaining spec omitted ...
+      tolerations:
+        - key: storagenode
+          operator: Exists
+----
