@@ -8,3 +8,4 @@ parameters:
     enabled: true
     api_token: ?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/token}
     fs_type: ext4
+    driver_daemonset_tolerations: {}
