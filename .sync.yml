@@ -1,0 +1,7 @@
+:global:
+  componentName: csi-cloudscale
+  feature_goldenTests: true
+
+docs/antora.yml:
+  name: csi-cloudscale
+  title: csi-cloudscale
