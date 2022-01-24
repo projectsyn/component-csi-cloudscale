@@ -1,0 +1,69 @@
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations: {}
+  labels:
+    name: ssd
+  name: ssd
+parameters:
+  csi.cloudscale.ch/volume-type: ssd
+  fsType: ext4
+provisioner: csi.cloudscale.ch
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+---
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations: {}
+  labels:
+    name: ssd-encrypted
+  name: ssd-encrypted
+parameters:
+  csi.cloudscale.ch/luks-cipher: aes-xts-plain64
+  csi.cloudscale.ch/luks-encrypted: 'true'
+  csi.cloudscale.ch/luks-key-size: '512'
+  csi.cloudscale.ch/volume-type: ssd
+  csi.storage.k8s.io/node-stage-secret-name: ${pvc.name}-luks-key
+  csi.storage.k8s.io/node-stage-secret-namespace: ${pvc.namespace}
+  fsType: ext4
+provisioner: csi.cloudscale.ch
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+---
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations: {}
+  labels:
+    name: bulk
+  name: bulk
+parameters:
+  csi.cloudscale.ch/volume-type: bulk
+  fsType: ext4
+provisioner: csi.cloudscale.ch
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+---
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations: {}
+  labels:
+    name: bulk-encrypted
+  name: bulk-encrypted
+parameters:
+  csi.cloudscale.ch/luks-cipher: aes-xts-plain64
+  csi.cloudscale.ch/luks-encrypted: 'true'
+  csi.cloudscale.ch/luks-key-size: '512'
+  csi.cloudscale.ch/volume-type: bulk
+  csi.storage.k8s.io/node-stage-secret-name: ${pvc.name}-luks-key
+  csi.storage.k8s.io/node-stage-secret-namespace: ${pvc.namespace}
+  fsType: ext4
+provisioner: csi.cloudscale.ch
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
