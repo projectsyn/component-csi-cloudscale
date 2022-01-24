@@ -12,4 +12,13 @@ parameters:
     classes: {}
     defaultClass: ''
 
-  csi_cloudscale: {}
+  csi_cloudscale:
+    resources:
+      controller:
+        csi-cloudscale-plugin:
+          limits:
+            memory: 1Gi
+      csi_driver:
+        csi-cloudscale-plugin:
+          limits:
+            cpu: 1000m

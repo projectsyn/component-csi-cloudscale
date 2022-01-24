@@ -1,3 +1,4 @@
+local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local sc = import 'lib/storageclass.libsonnet';
@@ -67,8 +68,94 @@ local customRBAC = if isOpenshift then [
   },
 ] else [];
 
-local inject_tolerations(object) =
+local defaultResources = {
+  csi_driver: {
+    'csi-node-driver-registrar': {
+      requests: {
+        cpu: '20m',
+        memory: '32Mi',
+      },
+      limits: {
+        cpu: '100m',
+        memory: '128Mi',
+      },
+    },
+    'csi-cloudscale-plugin': {
+      requests: {
+        cpu: '20m',
+        memory: '32Mi',
+      },
+      limits: {
+        cpu: '100m',
+        memory: '128Mi',
+      },
+    },
+  },
+  controller: {
+    'csi-provisioner': {
+      requests: {
+        cpu: '20m',
+        memory: '32Mi',
+      },
+      limits: {
+        cpu: '100m',
+        memory: '128Mi',
+      },
+    },
+    'csi-attacher': {
+      requests: {
+        cpu: '20m',
+        memory: '32Mi',
+      },
+      limits: {
+        cpu: '100m',
+        memory: '128Mi',
+      },
+    },
+    'csi-resizer': {
+      requests: {
+        cpu: '20m',
+        memory: '32Mi',
+      },
+      limits: {
+        cpu: '100m',
+        memory: '128Mi',
+      },
+    },
+    'csi-cloudscale-plugin': {
+      requests: {
+        cpu: '20m',
+        memory: '32Mi',
+      },
+      limits: {
+        cpu: '100m',
+        memory: '128Mi',
+      },
+    },
+  },
+};
+
+local patch_manifest(object) =
   local tolerations = params.driver_daemonset_tolerations;
+  local resources = if object.kind == 'DaemonSet' then
+    defaultResources.csi_driver +
+    com.makeMergeable(params.resources.csi_driver)
+  else if object.kind == 'StatefulSet' then
+    defaultResources.controller +
+    com.makeMergeable(params.resources.controller)
+  else
+    null;
+  assert
+    resources == null
+    || (
+      std.length(object.spec.template.spec.containers) ==
+      std.length(std.objectFields(resources))
+    ) : (
+      'csi-cloudscale upstream manifest "%s" changed. '
+      + 'Please check the default resource requests and limits configured in the component.'
+    ) % (
+      object.metadata.name
+    );
   if (
     object.kind == 'DaemonSet'
     && object.metadata.name == 'csi-cloudscale-node'
@@ -77,11 +164,35 @@ local inject_tolerations(object) =
       spec+: {
         template+: {
           spec+: {
+            containers: [
+              c {
+                resources+: com.getValueOrDefault(resources, c.name, {}),
+              }
+              for c in super.containers
+            ],
             tolerations+: [
               tolerations[t] {
                 key: t,
               }
               for t in std.objectFields(tolerations)
+            ],
+          },
+        },
+      },
+    }
+  else if (
+    object.kind == 'StatefulSet'
+    && object.metadata.name == 'csi-cloudscale-controller'
+  ) then
+    object {
+      spec+: {
+        template+: {
+          spec+: {
+            containers: [
+              c {
+                resources+: com.getValueOrDefault(resources, c.name, {}),
+              }
+              for c in super.containers
             ],
           },
         },
@@ -101,7 +212,7 @@ local inject_tolerations(object) =
   '01_storageclasses': std.flattenArrays(storageclasses),
   '02_secret': secret,
   '10_deployments': [
-    inject_tolerations(object) {
+    patch_manifest(object) {
       metadata+: {
         namespace: params.namespace,
       },
