@@ -1,4 +1,3 @@
-
 {
     "pr_template": "- ${{TITLE}} (#${{NUMBER}})",
     "categories": [
@@ -29,4 +28,3 @@
     ],
     "template": "${{CATEGORIZED_COUNT}} changes since ${{FROM_TAG}}\n\n${{CHANGELOG}}"
 }
-
