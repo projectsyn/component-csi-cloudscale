@@ -26,6 +26,13 @@ spec:
           image: quay.io/k8scsi/csi-provisioner:v2.0.4
           imagePullPolicy: Always
           name: csi-provisioner
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
           volumeMounts:
             - mountPath: /var/lib/csi/sockets/pluginproxy/
               name: socket-dir
@@ -38,6 +45,13 @@ spec:
           image: quay.io/k8scsi/csi-attacher:v3.0.2
           imagePullPolicy: Always
           name: csi-attacher
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
           volumeMounts:
             - mountPath: /var/lib/csi/sockets/pluginproxy/
               name: socket-dir
@@ -52,6 +66,13 @@ spec:
           image: quay.io/k8scsi/csi-resizer:v1.0.1
           imagePullPolicy: IfNotPresent
           name: csi-resizer
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
           volumeMounts:
             - mountPath: /var/lib/csi/sockets/pluginproxy/
               name: socket-dir
@@ -71,6 +92,13 @@ spec:
           image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.1.0
           imagePullPolicy: Always
           name: csi-cloudscale-plugin
+          resources:
+            limits:
+              cpu: 100m
+              memory: 1Gi
+            requests:
+              cpu: 20m
+              memory: 32Mi
           volumeMounts:
             - mountPath: /var/lib/csi/sockets/pluginproxy/
               name: socket-dir
@@ -125,6 +153,13 @@ spec:
                   - -c
                   - rm -rf /registration/csi.cloudscale.ch /registration/csi.cloudscale.ch-reg.sock
           name: csi-node-driver-registrar
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
           volumeMounts:
             - mountPath: /csi/
               name: plugin-dir
@@ -146,6 +181,13 @@ spec:
           image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.1.0
           imagePullPolicy: Always
           name: csi-cloudscale-plugin
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 128Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
           securityContext:
             allowPrivilegeEscalation: true
             capabilities:

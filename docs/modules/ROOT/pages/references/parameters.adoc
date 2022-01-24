@@ -88,3 +88,60 @@ spec:
         - key: storagenode
           operator: Exists
 ----
+
+== `resources`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+controller: {}
+csi_driver: {}
+----
+
+Resource requests and limits to apply to individual CSI driver containers.
+
+By default, each container is configured with the following requests and limits:
+
+[source,yaml]
+----
+resources:
+  requests:
+    cpu: 20m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+----
+
+The component looks for keys matching the individual container names for the controller StatefulSet and CSI driver daemonset in the keys `controller` and `csi_driver` of this parameter respectively.
+
+The value of such a key -- if found -- is merged with the default resource requests and limits which are defined in the component.
+The value is expected to be a value which is valid as a container's `resources` field.
+
+[NOTE]
+====
+The component doesn't validate provided requests and limits.
+It's the user's responsibility to provide values which result in a valid container spec.
+====
+
+=== Example
+
+This example increases the memory limit for the `csi-cloudscale-plugin` container for both the controller and the csi_driver to `256Mi`.
+
+[source,yaml]
+----
+parameters:
+  csi_cloudscale:
+    resources:
+      controller:
+        csi-cloudscale-plugin:
+          limits:
+            memory: 256Mi
+      csi_driver:
+        csi-cloudscale-plugin:
+          limits:
+            memory: 256Mi
+----
