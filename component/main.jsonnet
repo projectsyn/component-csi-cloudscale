@@ -77,7 +77,6 @@ local defaultResources = {
       },
       limits: {
         cpu: '100m',
-        memory: '128Mi',
       },
     },
     'csi-cloudscale-plugin': {
@@ -87,7 +86,6 @@ local defaultResources = {
       },
       limits: {
         cpu: '100m',
-        memory: '128Mi',
       },
     },
   },
@@ -99,7 +97,6 @@ local defaultResources = {
       },
       limits: {
         cpu: '100m',
-        memory: '128Mi',
       },
     },
     'csi-attacher': {
@@ -109,7 +106,6 @@ local defaultResources = {
       },
       limits: {
         cpu: '100m',
-        memory: '128Mi',
       },
     },
     'csi-resizer': {
@@ -119,7 +115,6 @@ local defaultResources = {
       },
       limits: {
         cpu: '100m',
-        memory: '128Mi',
       },
     },
     'csi-cloudscale-plugin': {
@@ -129,7 +124,6 @@ local defaultResources = {
       },
       limits: {
         cpu: '100m',
-        memory: '128Mi',
       },
     },
   },
