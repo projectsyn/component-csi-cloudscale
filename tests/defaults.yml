@@ -19,6 +19,9 @@ parameters:
           limits:
             memory: 1Gi
       csi_driver:
+        csi-node-driver-registrar:
+          requests:
+            cpu: null
         csi-cloudscale-plugin:
           limits:
             cpu: 1000m
