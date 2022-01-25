@@ -121,6 +121,8 @@ The component looks for keys matching the individual container names for the con
 The value of such a key -- if found -- is merged with the default resource requests and limits which are defined in the component.
 The value is expected to be a value which is valid as a container's `resources` field.
 
+The component supports removing requests or limits by setting the corresponding fields to `null`.
+
 [NOTE]
 ====
 The component doesn't validate provided requests and limits.

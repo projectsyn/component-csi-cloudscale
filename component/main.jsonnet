@@ -160,7 +160,9 @@ local patch_manifest(object) =
           spec+: {
             containers: [
               c {
-                resources+: com.getValueOrDefault(resources, c.name, {}),
+                resources+: std.prune(
+                  com.getValueOrDefault(resources, c.name, {})
+                ),
               }
               for c in super.containers
             ],
