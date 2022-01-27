@@ -68,88 +68,33 @@ local customRBAC = if isOpenshift then [
   },
 ] else [];
 
-local defaultResources = {
-  csi_driver: {
-    'csi-node-driver-registrar': {
-      requests: {
-        cpu: '20m',
-        memory: '32Mi',
-      },
-      limits: {
-        cpu: '100m',
-      },
-    },
-    'csi-cloudscale-plugin': {
-      requests: {
-        cpu: '20m',
-        memory: '32Mi',
-      },
-      limits: {
-        cpu: '100m',
-      },
-    },
-  },
-  controller: {
-    'csi-provisioner': {
-      requests: {
-        cpu: '20m',
-        memory: '32Mi',
-      },
-      limits: {
-        cpu: '100m',
-      },
-    },
-    'csi-attacher': {
-      requests: {
-        cpu: '20m',
-        memory: '32Mi',
-      },
-      limits: {
-        cpu: '100m',
-      },
-    },
-    'csi-resizer': {
-      requests: {
-        cpu: '20m',
-        memory: '32Mi',
-      },
-      limits: {
-        cpu: '100m',
-      },
-    },
-    'csi-cloudscale-plugin': {
-      requests: {
-        cpu: '20m',
-        memory: '32Mi',
-      },
-      limits: {
-        cpu: '100m',
-      },
-    },
-  },
-};
-
 local patch_manifest(object) =
   local tolerations = params.driver_daemonset_tolerations;
-  local resources = if object.kind == 'DaemonSet' then
-    defaultResources.csi_driver +
-    com.makeMergeable(params.resources.csi_driver)
+  local resourcesInParams = if object.kind == 'DaemonSet' then
+    params.resources.csi_driver
   else if object.kind == 'StatefulSet' then
-    defaultResources.controller +
-    com.makeMergeable(params.resources.controller)
+    params.resources.controller
   else
     null;
-  assert
-    resources == null
-    || (
-      std.length(object.spec.template.spec.containers) ==
-      std.length(std.objectFields(resources))
-    ) : (
-      'csi-cloudscale upstream manifest "%s" changed. '
-      + 'Please check the default resource requests and limits configured in the component.'
-    ) % (
-      object.metadata.name
-    );
+  local resources =
+    if (
+      resourcesInParams != null
+      && (
+        std.length(object.spec.template.spec.containers) !=
+        std.length(std.objectFields(resourcesInParams))
+      )
+    ) then
+      std.trace(
+        (
+          'The number of containers in the csi-cloudscale upstream manifest "%s" changed. '
+          + 'Please check the default resource requests and limits configured in the component.'
+        ) % (
+          object.metadata.name
+        ),
+        resourcesInParams
+      )
+    else
+      resourcesInParams;
   if (
     object.kind == 'DaemonSet'
     && object.metadata.name == 'csi-cloudscale-node'

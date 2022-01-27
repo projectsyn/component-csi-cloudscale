@@ -93,33 +93,13 @@ spec:
 
 [horizontal]
 type:: dict
-default::
-+
-[source,yaml]
-----
-controller: {}
-csi_driver: {}
-----
+default:: https://github.com/projectsyn/component-csi-cloudscale/blob/master/class/defaults.yml[See `class/defaults.yml`]
 
 Resource requests and limits to apply to individual CSI driver containers.
 
-By default, each container is configured with the following requests and limits:
-
-[source,yaml]
-----
-resources:
-  requests:
-    cpu: 20m
-    memory: 32Mi
-  limits:
-    cpu: 100m
-    memory: 128Mi
-----
-
 The component looks for keys matching the individual container names for the controller StatefulSet and CSI driver daemonset in the keys `controller` and `csi_driver` of this parameter respectively.
 
-The value of such a key -- if found -- is merged with the default resource requests and limits which are defined in the component.
-The value is expected to be a value which is valid as a container's `resources` field.
+The value of such a key -- if found -- is used as the container's `resources` field.
 
 The component supports removing requests or limits by setting the corresponding fields to `null`.
 
