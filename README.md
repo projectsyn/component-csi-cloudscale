@@ -1,11 +1,13 @@
 # Commodore Component: csi-cloudscale
 
-This is a [Commodore][commodore] Component for [csi-cloudscale](https://github.com/cloudscale-ch/csi-cloudscale).
+This is a [Commodore][commodore] Component for csi-cloudscale.
 
 This repository is part of Project Syn.
 For documentation on Project Syn and this component, see https://syn.tools.
 
 ## Documentation
+
+The rendered documentation for this component is available on the [Commodore Components Hub](https://hub.syn.tools/csi-cloudscale).
 
 Documentation for this component is written using [Asciidoc][asciidoc] and [Antora][antora].
 It is located in the [docs/](docs) folder.
@@ -20,6 +22,6 @@ After writing the documentation, please use the `make docs-vale` command and cor
 This library is licensed under [BSD-3-Clause](LICENSE).
 For information about how to contribute see [CONTRIBUTING](CONTRIBUTING.md).
 
-[commodore]: https://docs.syn.tools/commodore/index.html
+[commodore]: https://syn.tools/commodore/
 [asciidoc]: https://asciidoctor.org/
 [antora]: https://antora.org/
