@@ -21,7 +21,7 @@ help: ## Show this help
 all: lint
 
 .PHONY: lint
-lint: lint_jsonnet lint_yaml lint_adoc ## All-in-one linting
+lint: lint_jsonnet lint_yaml lint_adoc lint_kubent ## All-in-one linting
 
 .PHONY: lint_jsonnet
 lint_jsonnet: $(JSONNET_FILES) ## Lint jsonnet files
@@ -34,6 +34,10 @@ lint_yaml: ## Lint yaml files
 .PHONY: lint_adoc
 lint_adoc: ## Lint documentation
 	$(VALE_CMD) $(VALE_ARGS)
+
+.PHONY: lint_kubent
+lint_kubent: ## Lint deprecated Kubernetes API versions
+	$(KUBENT_DOCKER) $(KUBENT_ARGS) -f $(KUBENT_FILES)
 
 .PHONY: format
 format: format_jsonnet ## All-in-one formatting
