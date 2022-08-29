@@ -1,0 +1,21 @@
+{
+  "template": "https://github.com/projectsyn/commodore-component-template.git",
+  "commit": "e6c4fd69190db1ad12e941d578b9423d0e2f993c",
+  "checkout": "main",
+  "context": {
+    "cookiecutter": {
+      "name": "csi-cloudscale",
+      "slug": "csi-cloudscale",
+      "parameter_key": "csi_cloudscale",
+      "test_cases": "defaults",
+      "add_golden": "y",
+      "add_matrix": "n",
+      "add_go_unit": "n",
+      "github_owner": "projectsyn",
+      "github_name": "component-csi-cloudscale",
+      "github_url": "https://github.com/projectsyn/component-csi-cloudscale",
+      "_template": "https://github.com/projectsyn/commodore-component-template.git"
+    }
+  },
+  "directory": null
+}
