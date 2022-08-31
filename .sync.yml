@@ -1,3 +1,0 @@
-:global:
-  componentName: csi-cloudscale
-  feature_goldenTests: true
