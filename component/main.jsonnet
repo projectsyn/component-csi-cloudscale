@@ -32,7 +32,7 @@ local storageclasses = [ [
   } + config,
 ] for type in [ 'ssd', 'bulk' ] ];
 
-local secret = kube.Secret('cloudscale') {
+local secret = kube.Secret(params.api_token_secret_name) {
   metadata+: {
     namespace: params.namespace,
   },
@@ -41,18 +41,12 @@ local secret = kube.Secret('cloudscale') {
   },
 };
 
-local manifests = std.parseJson(
-  kap.yaml_load_stream('csi-cloudscale/manifests/' + params.version + '/deploy.yaml')
-);
-
 local customRBAC = if isOpenshift then [
   kube.RoleBinding('csi-hostnetwork') {
     roleRef_: kube.ClusterRole('system:openshift:scc:hostnetwork'),
     subjects: [ {
       kind: 'ServiceAccount',
-      name: std.filter(
-        function(obj) obj.kind == 'StatefulSet', manifests
-      )[0].spec.template.spec.serviceAccount,
+      name: params.helm_values.controller.serviceAccountName,
       namespace: params.namespace,
     } ],
   },
@@ -60,87 +54,11 @@ local customRBAC = if isOpenshift then [
     roleRef_: kube.ClusterRole('system:openshift:scc:privileged'),
     subjects: [ {
       kind: 'ServiceAccount',
-      name: std.filter(
-        function(obj) obj.kind == 'DaemonSet', manifests
-      )[0].spec.template.spec.serviceAccount,
+      name: params.helm_values.node.serviceAccountName,
       namespace: params.namespace,
     } ],
   },
 ] else [];
-
-local patch_manifest(object) =
-  local tolerations = params.driver_daemonset_tolerations;
-  local resourcesInParams = if object.kind == 'DaemonSet' then
-    params.resources.csi_driver
-  else if object.kind == 'StatefulSet' then
-    params.resources.controller
-  else
-    null;
-  local resources =
-    if (
-      resourcesInParams != null
-      && (
-        std.length(object.spec.template.spec.containers) !=
-        std.length(std.objectFields(resourcesInParams))
-      )
-    ) then
-      std.trace(
-        (
-          'The number of containers in the csi-cloudscale upstream manifest "%s" changed. '
-          + 'Please check the default resource requests and limits configured in the component.'
-        ) % (
-          object.metadata.name
-        ),
-        resourcesInParams
-      )
-    else
-      resourcesInParams;
-  if (
-    object.kind == 'DaemonSet'
-    && object.metadata.name == 'csi-cloudscale-node'
-  ) then
-    object {
-      spec+: {
-        template+: {
-          spec+: {
-            containers: [
-              c {
-                resources+: std.prune(
-                  com.getValueOrDefault(resources, c.name, {})
-                ),
-              }
-              for c in super.containers
-            ],
-            tolerations+: [
-              tolerations[t] {
-                key: t,
-              }
-              for t in std.objectFields(tolerations)
-            ],
-          },
-        },
-      },
-    }
-  else if (
-    object.kind == 'StatefulSet'
-    && object.metadata.name == 'csi-cloudscale-controller'
-  ) then
-    object {
-      spec+: {
-        template+: {
-          spec+: {
-            containers: [
-              c {
-                resources+: com.getValueOrDefault(resources, c.name, {}),
-              }
-              for c in super.containers
-            ],
-          },
-        },
-      },
-    }
-  else
-    object;
 
 {
   [if params.namespace != 'kube-system' then '00_namespace']: kube.Namespace(params.namespace) + if isOpenshift then {
@@ -152,27 +70,5 @@ local patch_manifest(object) =
   } else {},
   '01_storageclasses': std.flattenArrays(storageclasses),
   '02_secret': secret,
-  '10_deployments': [
-    patch_manifest(object) {
-      metadata+: {
-        namespace: params.namespace,
-      },
-    }
-    for object in manifests
-    if std.setMember(object.kind, std.set([ 'StatefulSet', 'ServiceAccount', 'DaemonSet' ]))
-  ],
-  '20_rbac': [
-    if std.objectHas(object, 'subjects') then object {
-      subjects: [
-        sub {
-          namespace: params.namespace,
-        }
-        for sub in object.subjects
-      ],
-    }
-    else object
-    for object in manifests
-    if std.setMember(object.kind, std.set([ 'ClusterRole', 'ClusterRoleBinding' ]))
-  ],
   [if std.length(customRBAC) > 0 then '30_custom_rbac']: customRBAC,
 }

@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: csi-cloudscale-node
+spec:
+  selector:
+    matchLabels:
+      app: csi-cloudscale-node
+  template:
+    metadata:
+      labels:
+        app: csi-cloudscale-node
+        role: csi-cloudscale
+    spec:
+      containers:
+        - args:
+            - --v=5
+            - --csi-address=$(ADDRESS)
+            - --kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+            - name: DRIVER_REG_SOCK_PATH
+              value: /var/lib/kubelet/plugins/csi.cloudscale.ch/csi.sock
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.5.1
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - rm -rf /registration/csi.cloudscale.ch /registration/csi.cloudscale.ch-reg.sock
+          name: csi-node-driver-registrar
+          resources:
+            requests:
+              cpu: null
+              memory: 32Mi
+          volumeMounts:
+            - mountPath: /csi/
+              name: plugin-dir
+            - mountPath: /registration/
+              name: registration-dir
+        - args:
+            - --endpoint=$(CSI_ENDPOINT)
+            - --url=$(CLOUDSCALE_API_URL)
+          env:
+            - name: CSI_ENDPOINT
+              value: unix:///csi/csi.sock
+            - name: CLOUDSCALE_API_URL
+              value: https://api.cloudscale.ch/
+            - name: CLOUDSCALE_MAX_CSI_VOLUMES_PER_NODE
+              value: '125'
+            - name: CLOUDSCALE_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: access-token
+                  name: cloudscale
+          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.5.0
+          imagePullPolicy: IfNotPresent
+          name: csi-cloudscale-plugin
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+            privileged: true
+          volumeMounts:
+            - mountPath: /csi
+              name: plugin-dir
+            - mountPath: /var/lib/kubelet
+              mountPropagation: Bidirectional
+              name: pods-mount-dir
+            - mountPath: /dev
+              name: device-dir
+            - mountPath: /tmp
+              name: tmpfs
+      hostNetwork: true
+      priorityClassName: system-node-critical
+      serviceAccount: csi-cloudscale-node-sa
+      volumes:
+        - hostPath:
+            path: /var/lib/kubelet/plugins_registry/
+            type: DirectoryOrCreate
+          name: registration-dir
+        - hostPath:
+            path: /var/lib/kubelet/plugins/csi.cloudscale.ch
+            type: DirectoryOrCreate
+          name: plugin-dir
+        - hostPath:
+            path: /var/lib/kubelet
+            type: Directory
+          name: pods-mount-dir
+        - hostPath:
+            path: /dev
+          name: device-dir
+        - emptyDir:
+            medium: Memory
+          name: tmpfs

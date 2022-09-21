@@ -1,15 +1,24 @@
 parameters:
   kapitan:
     dependencies:
-      - type: https
-        source: https://raw.githubusercontent.com/cloudscale-ch/csi-cloudscale/master/deploy/kubernetes/releases/csi-cloudscale-${csi_cloudscale:version}.yaml
-        output_path: dependencies/csi-cloudscale/manifests/${csi_cloudscale:version}/deploy.yaml
+      - type: helm
+        source: ${csi_cloudscale:charts:csi-cloudscale:source}
+        chart_name: csi-cloudscale
+        output_path: ${_base_directory}/helmcharts/csi-cloudscale/${csi_cloudscale:charts:csi-cloudscale:version}
     compile:
       - input_paths:
-          - csi-cloudscale/component/app.jsonnet
+          - ${_base_directory}/component/app.jsonnet
         input_type: jsonnet
         output_path: apps/
       - input_paths:
-          - csi-cloudscale/component/main.jsonnet
+          - ${_base_directory}/helmcharts/csi-cloudscale/${csi_cloudscale:charts:csi-cloudscale:version}
+        input_type: helm
+        helm_values: ${csi_cloudscale:helm_values}
+        helm_params:
+          name: csi-cloudscale
+          namespace: ${csi_cloudscale:namespace}
+        output_path: csi-cloudscale/01_helm_chart
+      - input_paths:
+          - ${_base_directory}/component/main.jsonnet
         input_type: jsonnet
         output_path: csi-cloudscale/
