@@ -1,115 +1,13 @@
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: csi-cloudscale-controller
-  namespace: syn-csi-cloudscale
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: csi-cloudscale-controller
-  serviceName: csi-cloudscale
-  template:
-    metadata:
-      labels:
-        app: csi-cloudscale-controller
-        role: csi-cloudscale
-    spec:
-      containers:
-        - args:
-            - --csi-address=$(ADDRESS)
-            - --default-fstype=ext4
-            - --v=5
-          env:
-            - name: ADDRESS
-              value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: quay.io/k8scsi/csi-provisioner:v2.0.4
-          imagePullPolicy: Always
-          name: csi-provisioner
-          resources:
-            limits:
-              cpu: 100m
-            requests:
-              cpu: 20m
-              memory: 32Mi
-          volumeMounts:
-            - mountPath: /var/lib/csi/sockets/pluginproxy/
-              name: socket-dir
-        - args:
-            - --csi-address=$(ADDRESS)
-            - --v=5
-          env:
-            - name: ADDRESS
-              value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: quay.io/k8scsi/csi-attacher:v3.0.2
-          imagePullPolicy: Always
-          name: csi-attacher
-          resources:
-            limits:
-              cpu: 100m
-            requests:
-              cpu: 20m
-              memory: 32Mi
-          volumeMounts:
-            - mountPath: /var/lib/csi/sockets/pluginproxy/
-              name: socket-dir
-        - args:
-            - --csi-address=$(ADDRESS)
-            - --timeout=30s
-            - --v=5
-            - --handle-volume-inuse-error=false
-          env:
-            - name: ADDRESS
-              value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: quay.io/k8scsi/csi-resizer:v1.0.1
-          imagePullPolicy: IfNotPresent
-          name: csi-resizer
-          resources:
-            limits:
-              cpu: 100m
-            requests:
-              cpu: 20m
-              memory: 32Mi
-          volumeMounts:
-            - mountPath: /var/lib/csi/sockets/pluginproxy/
-              name: socket-dir
-        - args:
-            - --endpoint=$(CSI_ENDPOINT)
-            - --url=$(CLOUDSCALE_API_URL)
-          env:
-            - name: CSI_ENDPOINT
-              value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
-            - name: CLOUDSCALE_API_URL
-              value: https://api.cloudscale.ch/
-            - name: CLOUDSCALE_ACCESS_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  key: access-token
-                  name: cloudscale
-          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.2.1
-          imagePullPolicy: Always
-          name: csi-cloudscale-plugin
-          resources:
-            limits:
-              cpu: 100m
-              memory: 1Gi
-            requests:
-              cpu: 20m
-              memory: 32Mi
-          volumeMounts:
-            - mountPath: /var/lib/csi/sockets/pluginproxy/
-              name: socket-dir
-      hostNetwork: true
-      priorityClassName: system-cluster-critical
-      serviceAccount: csi-cloudscale-controller-sa
-      volumes:
-        - emptyDir: {}
-          name: socket-dir
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: csi-cloudscale-controller-sa
+  namespace: syn-csi-cloudscale
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: csi-cloudscale-node-sa
   namespace: syn-csi-cloudscale
 ---
 apiVersion: apps/v1
@@ -142,6 +40,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
           image: quay.io/k8scsi/csi-node-driver-registrar:v2.0.1
+          imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
               exec:
@@ -168,13 +67,15 @@ spec:
               value: unix:///csi/csi.sock
             - name: CLOUDSCALE_API_URL
               value: https://api.cloudscale.ch/
+            - name: CLOUDSCALE_MAX_CSI_VOLUMES_PER_NODE
+              value: '125'
             - name: CLOUDSCALE_ACCESS_TOKEN
               valueFrom:
                 secretKeyRef:
                   key: access-token
                   name: cloudscale
-          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.2.1
-          imagePullPolicy: Always
+          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.3.0
+          imagePullPolicy: IfNotPresent
           name: csi-cloudscale-plugin
           resources:
             limits:
@@ -222,8 +123,110 @@ spec:
             medium: Memory
           name: tmpfs
 ---
-apiVersion: v1
-kind: ServiceAccount
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: csi-cloudscale-node-sa
+  name: csi-cloudscale-controller
   namespace: syn-csi-cloudscale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csi-cloudscale-controller
+  serviceName: csi-cloudscale
+  template:
+    metadata:
+      labels:
+        app: csi-cloudscale-controller
+        role: csi-cloudscale
+    spec:
+      containers:
+        - args:
+            - --csi-address=$(ADDRESS)
+            - --default-fstype=ext4
+            - --v=5
+          env:
+            - name: ADDRESS
+              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+          image: quay.io/k8scsi/csi-provisioner:v2.0.4
+          imagePullPolicy: IfNotPresent
+          name: csi-provisioner
+          resources:
+            limits:
+              cpu: 100m
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          volumeMounts:
+            - mountPath: /var/lib/csi/sockets/pluginproxy/
+              name: socket-dir
+        - args:
+            - --csi-address=$(ADDRESS)
+            - --v=5
+          env:
+            - name: ADDRESS
+              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+          image: quay.io/k8scsi/csi-attacher:v3.0.2
+          imagePullPolicy: IfNotPresent
+          name: csi-attacher
+          resources:
+            limits:
+              cpu: 100m
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          volumeMounts:
+            - mountPath: /var/lib/csi/sockets/pluginproxy/
+              name: socket-dir
+        - args:
+            - --csi-address=$(ADDRESS)
+            - --timeout=30s
+            - --v=5
+            - --handle-volume-inuse-error=false
+          env:
+            - name: ADDRESS
+              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+          image: quay.io/k8scsi/csi-resizer:v1.0.1
+          imagePullPolicy: IfNotPresent
+          name: csi-resizer
+          resources:
+            limits:
+              cpu: 100m
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          volumeMounts:
+            - mountPath: /var/lib/csi/sockets/pluginproxy/
+              name: socket-dir
+        - args:
+            - --endpoint=$(CSI_ENDPOINT)
+            - --url=$(CLOUDSCALE_API_URL)
+          env:
+            - name: CSI_ENDPOINT
+              value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
+            - name: CLOUDSCALE_API_URL
+              value: https://api.cloudscale.ch/
+            - name: CLOUDSCALE_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: access-token
+                  name: cloudscale
+          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.3.0
+          imagePullPolicy: IfNotPresent
+          name: csi-cloudscale-plugin
+          resources:
+            limits:
+              cpu: 100m
+              memory: 1Gi
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          volumeMounts:
+            - mountPath: /var/lib/csi/sockets/pluginproxy/
+              name: socket-dir
+      hostNetwork: true
+      priorityClassName: system-cluster-critical
+      serviceAccount: csi-cloudscale-controller-sa
+      volumes:
+        - emptyDir: {}
+          name: socket-dir
