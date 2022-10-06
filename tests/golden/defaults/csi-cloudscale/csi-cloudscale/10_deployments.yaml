@@ -39,7 +39,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: quay.io/k8scsi/csi-node-driver-registrar:v2.0.1
+          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.5.1
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -74,7 +74,7 @@ spec:
                 secretKeyRef:
                   key: access-token
                   name: cloudscale
-          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.3.0
+          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.4.1
           imagePullPolicy: IfNotPresent
           name: csi-cloudscale-plugin
           resources:
@@ -148,7 +148,7 @@ spec:
           env:
             - name: ADDRESS
               value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: quay.io/k8scsi/csi-provisioner:v2.0.4
+          image: registry.k8s.io/sig-storage/csi-provisioner:v3.2.1
           imagePullPolicy: IfNotPresent
           name: csi-provisioner
           resources:
@@ -166,7 +166,7 @@ spec:
           env:
             - name: ADDRESS
               value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: quay.io/k8scsi/csi-attacher:v3.0.2
+          image: registry.k8s.io/sig-storage/csi-attacher:v4.0.0
           imagePullPolicy: IfNotPresent
           name: csi-attacher
           resources:
@@ -186,7 +186,7 @@ spec:
           env:
             - name: ADDRESS
               value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: quay.io/k8scsi/csi-resizer:v1.0.1
+          image: registry.k8s.io/sig-storage/csi-resizer:v1.6.0
           imagePullPolicy: IfNotPresent
           name: csi-resizer
           resources:
@@ -211,7 +211,7 @@ spec:
                 secretKeyRef:
                   key: access-token
                   name: cloudscale
-          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.3.0
+          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.4.1
           imagePullPolicy: IfNotPresent
           name: csi-cloudscale-plugin
           resources:

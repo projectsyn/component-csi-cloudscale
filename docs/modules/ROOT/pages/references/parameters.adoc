@@ -18,7 +18,7 @@ See https://kubernetes.io/docs/concepts/policy/resource-quotas/#limit-priority-c
 
 [horizontal]
 type:: string
-default:: `v3.3.0`
+default:: `v3.4.1`
 
 Version of the driver to install.
 See https://github.com/cloudscale-ch/csi-cloudscale/releases[available versions].
@@ -51,6 +51,8 @@ type:: string
 default:: ext4
 
 The filesystem type used in the storage classes.
+
+According cloudscale.ch just ext4 is supported.
 
 == `driver_daemonset_tolerations`
 
