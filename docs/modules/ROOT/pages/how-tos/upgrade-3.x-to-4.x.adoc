@@ -1,0 +1,12 @@
+= Upgrade from 3.x to 4.x
+
+This guide describes the steps to perform an upgrade of the component from version 3.x to 4.x.
+
+== Migration guide
+
+Parameter `version` has been removed in component version v4.0.0.
+If you use this parameter to deploy a specific version of the CSI driver, you should set parameter `images.cloudscale-csi-plugin.tag` to the desired version.
+
+Alternatively, you may want to select a specific Helm chart version.
+See the https://github.com/cloudscale-ch/csi-cloudscale/releases?q=helm-csi&expanded=true[helm-csi-cloudscale GitHub releases] for available Helm chart versions.
+The chart version can be specified in parameter `charts.csi-cloudscale.version`.
