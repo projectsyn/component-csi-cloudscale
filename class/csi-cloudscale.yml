@@ -22,3 +22,9 @@ parameters:
           - ${_base_directory}/component/main.jsonnet
         input_type: jsonnet
         output_path: csi-cloudscale/
+  commodore:
+    postprocess:
+      filters:
+        - type: jsonnet
+          filter: postprocess/driver_daemonset_tolerations.jsonnet
+          path: csi-cloudscale/01_helm_chart/csi-cloudscale/templates

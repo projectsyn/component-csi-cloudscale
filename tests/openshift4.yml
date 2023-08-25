@@ -14,3 +14,9 @@ parameters:
 
   facts:
     distribution: openshift4
+
+  csi_cloudscale:
+    driver_daemonset_tolerations:
+      storagenode:
+        operator: Exists
+        effect: NoSchedule

@@ -86,6 +86,10 @@ spec:
       hostNetwork: true
       priorityClassName: system-node-critical
       serviceAccount: csi-cloudscale-node-sa
+      tolerations:
+        - effect: NoSchedule
+          key: storagenode
+          operator: Exists
       volumes:
         - hostPath:
             path: /var/lib/kubelet/plugins_registry/
