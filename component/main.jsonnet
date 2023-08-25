@@ -60,6 +60,15 @@ local customRBAC = if isOpenshift then [
   },
 ] else [];
 
+local warnDeprecatedParam(o) =
+  if std.objectHas(params, 'version') then
+    std.trace(
+      'Component parameter `version` is removed and its value is ignored. Please use parameters `charts` and `images` to override the csi-cloudscale version.',
+      o
+    )
+  else
+    o;
+
 {
   [if params.namespace != 'kube-system' then '00_namespace']: kube.Namespace(params.namespace) + if isOpenshift then {
     metadata+: {
@@ -69,6 +78,6 @@ local customRBAC = if isOpenshift then [
     },
   } else {},
   '01_storageclasses': std.flattenArrays(storageclasses),
-  '02_secret': secret,
+  '02_secret': warnDeprecatedParam(secret),
   [if std.length(customRBAC) > 0 then '30_custom_rbac']: customRBAC,
 }
