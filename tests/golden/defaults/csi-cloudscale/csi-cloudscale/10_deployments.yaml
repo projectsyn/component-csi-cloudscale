@@ -50,8 +50,6 @@ spec:
                   - rm -rf /registration/csi.cloudscale.ch /registration/csi.cloudscale.ch-reg.sock
           name: csi-node-driver-registrar
           resources:
-            limits:
-              cpu: 100m
             requests:
               memory: 32Mi
           volumeMounts:
@@ -152,8 +150,6 @@ spec:
           imagePullPolicy: IfNotPresent
           name: csi-provisioner
           resources:
-            limits:
-              cpu: 100m
             requests:
               cpu: 20m
               memory: 32Mi
@@ -170,8 +166,6 @@ spec:
           imagePullPolicy: IfNotPresent
           name: csi-attacher
           resources:
-            limits:
-              cpu: 100m
             requests:
               cpu: 20m
               memory: 32Mi
@@ -190,8 +184,6 @@ spec:
           imagePullPolicy: IfNotPresent
           name: csi-resizer
           resources:
-            limits:
-              cpu: 100m
             requests:
               cpu: 20m
               memory: 32Mi
@@ -216,7 +208,6 @@ spec:
           name: csi-cloudscale-plugin
           resources:
             limits:
-              cpu: 100m
               memory: 1Gi
             requests:
               cpu: 20m

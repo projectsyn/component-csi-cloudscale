@@ -15,36 +15,24 @@ parameters:
           requests:
             cpu: 20m
             memory: 32Mi
-          limits:
-            cpu: 100m
         csi-attacher:
           requests:
             cpu: 20m
             memory: 32Mi
-          limits:
-            cpu: 100m
         csi-resizer:
           requests:
             cpu: 20m
             memory: 32Mi
-          limits:
-            cpu: 100m
         csi-cloudscale-plugin:
           requests:
             cpu: 20m
             memory: 32Mi
-          limits:
-            cpu: 100m
       csi_driver:
         csi-node-driver-registrar:
           requests:
             cpu: 20m
             memory: 32Mi
-          limits:
-            cpu: 100m
         csi-cloudscale-plugin:
           requests:
             cpu: 20m
             memory: 32Mi
-          limits:
-            cpu: 100m
