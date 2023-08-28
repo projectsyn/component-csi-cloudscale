@@ -14,26 +14,41 @@ In K8s prior to 1.17, the driver won't run in namespaces other than `kube-system
 This is because the priority class `system-cluster-critical` is only available to pods in namespace `kube-system`.
 See https://kubernetes.io/docs/concepts/policy/resource-quotas/#limit-priority-class-consumption-by-default[the Kubernetes priority class consumption] documentation for instructions on how to allow the driver to run in a namespace other than `kube-system`.
 
-== `version`
+== `images`
 
 [horizontal]
-type:: string
-default:: `v3.5.0`
+type:: dictionary
+default:: https://github.com/projectsyn/component-csi-cloudscale/blob/master/class/defaults.yml[See `class/defaults.yml`]
 
-Version of the driver to install.
-See https://github.com/cloudscale-ch/csi-cloudscale/releases[available versions].
-See https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility[Kubernetes compatibility] to choose the right version for your cluster.
+Container image to use for the cloudscale.ch CSI driver.
+See the upstream list of https://github.com/cloudscale-ch/csi-cloudscale/releases[available versions] for supported values.
+See the upstream https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility[Kubernetes compatibility table] to choose the right version for your cluster.
 
+== `charts`
+
+[horizontal]
+type:: dictionary
+default:: https://github.com/projectsyn/component-csi-cloudscale/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Helm chart to use to deploy the cloudscale.ch CSI driver.
 
 == `api_token`
 
 [horizontal]
 type:: string
-default:: Vault reference
+default:: `?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/token}`
 
-Cloudscale API token to be used by the CSI driver.
+cloudscale.ch API token to be used by the CSI driver.
 This should be a reference to a secret in Vault instead of the plaintext token.
 
+== `api_token_secret_name`
+
+[horizontal]
+type:: string
+default:: `cloudscale`
+
+Name of the Kubernetes secret which is created to hold the API token.
+The value of this parameter is also passed to the Helm chart as `helm_values.token.existingSecret`
 
 == `fs_type`
 
@@ -54,6 +69,8 @@ default:: `{}`
 Tolerations that should be applied to the CSI node driver daemonset.
 The component will transform entries in the dictionary to valid Kubernetes `tolerations` entries.
 The component will reuse the key in the dictionary as value for field `key` in the `tolerations` entry.
+
+NOTE: The component will append tolerations defined in this parameter to tolerations provided through `helm_values.node.tolerations`.
 
 === Example
 
@@ -120,3 +137,17 @@ parameters:
           limits:
             memory: 256Mi
 ----
+
+== `helm_values`
+
+[horizontal]
+type:: dictionary
+default:: https://github.com/projectsyn/component-csi-cloudscale/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Helm values to use when rendering the CSI driver Helm chart.
+See https://github.com/cloudscale-ch/csi-cloudscale/blob/master/charts/csi-cloudscale/values.yaml[the upstream `values.yaml`] for supported values.
+
+[NOTE]
+====
+We explicitly set fields `controller.serviceAccountName` and `node.serviceAccountName` and reference those fields in the component to manage additional RoleBindings on OpenShift 4.
+====

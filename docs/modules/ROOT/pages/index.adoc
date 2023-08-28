@@ -13,7 +13,7 @@ See https://github.com/cloudscale-ch/csi-cloudscale#kubernetes-compatibility["Ku
 
 == StorageClasses
 
-The following storage classess are set up by this component:
+The following storage classes are set up by this component:
 
 [cols="2,2a,2"]
 |===
