@@ -5,7 +5,7 @@ local sc = import 'lib/storageclass.libsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.csi_cloudscale;
 
-local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
+local isOpenshift = std.member([ 'openshift4', 'oke' ], inv.parameters.facts.distribution);
 
 local config = {
   allowVolumeExpansion: true,
