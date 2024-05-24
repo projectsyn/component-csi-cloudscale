@@ -79,7 +79,7 @@ spec:
                 secretKeyRef:
                   key: access-token
                   name: cloudscale
-          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.5.5
+          image: quay.io/cloudscalech/cloudscale-csi-plugin:v3.5.6
           imagePullPolicy: IfNotPresent
           name: csi-cloudscale-plugin
           resources:
