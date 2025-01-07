@@ -9,7 +9,7 @@ parameters:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
         input_type: jsonnet
-        output_path: apps/
+        output_path: .
       - input_paths:
           - ${_base_directory}/helmcharts/csi-cloudscale/${csi_cloudscale:charts:csi-cloudscale:version}
         input_type: helm

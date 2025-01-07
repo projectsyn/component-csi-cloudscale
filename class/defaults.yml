@@ -1,5 +1,7 @@
 parameters:
   csi_cloudscale:
+    =_metadata:
+      multi_tenant: true
     namespace: syn-csi-cloudscale
 
     charts:
