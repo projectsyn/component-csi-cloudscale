@@ -26,7 +26,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.5.1
+          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.15.0
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -48,6 +48,7 @@ spec:
         - args:
             - --endpoint=$(CSI_ENDPOINT)
             - --url=$(CLOUDSCALE_API_URL)
+            - --log-level=info
           env:
             - name: CSI_ENDPOINT
               value: unix:///csi/csi.sock
@@ -87,7 +88,7 @@ spec:
               name: tmpfs
       hostNetwork: true
       priorityClassName: system-node-critical
-      serviceAccount: csi-cloudscale-node-sa
+      serviceAccountName: csi-cloudscale-node-sa
       volumes:
         - hostPath:
             path: /var/lib/kubelet/plugins_registry/

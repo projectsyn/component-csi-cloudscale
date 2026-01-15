@@ -19,10 +19,11 @@ spec:
             - --csi-address=$(ADDRESS)
             - --default-fstype=ext4
             - --v=5
+            - --feature-gates=Topology=false
           env:
             - name: ADDRESS
               value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: registry.k8s.io/sig-storage/csi-provisioner:v3.2.1
+          image: registry.k8s.io/sig-storage/csi-provisioner:v5.3.0
           imagePullPolicy: IfNotPresent
           name: csi-provisioner
           resources:
@@ -38,7 +39,7 @@ spec:
           env:
             - name: ADDRESS
               value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: registry.k8s.io/sig-storage/csi-attacher:v4.0.0
+          image: registry.k8s.io/sig-storage/csi-attacher:v4.10.0
           imagePullPolicy: IfNotPresent
           name: csi-attacher
           resources:
@@ -56,7 +57,7 @@ spec:
           env:
             - name: ADDRESS
               value: /var/lib/csi/sockets/pluginproxy/csi.sock
-          image: registry.k8s.io/sig-storage/csi-resizer:v1.6.0
+          image: registry.k8s.io/sig-storage/csi-resizer:v2.0.0
           imagePullPolicy: IfNotPresent
           name: csi-resizer
           resources:
@@ -69,6 +70,7 @@ spec:
         - args:
             - --endpoint=$(CSI_ENDPOINT)
             - --url=$(CLOUDSCALE_API_URL)
+            - --log-level=info
           env:
             - name: CSI_ENDPOINT
               value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
