@@ -3,6 +3,7 @@ parameters:
     dependencies:
       - type: helm
         source: ${csi_cloudscale:charts:csi-cloudscale:source}
+        version: ${csi_cloudscale:charts:csi-cloudscale:version}
         chart_name: csi-cloudscale
         output_path: ${_base_directory}/helmcharts/csi-cloudscale/${csi_cloudscale:charts:csi-cloudscale:version}
     compile:
