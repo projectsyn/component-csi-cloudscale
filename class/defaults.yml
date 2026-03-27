@@ -13,7 +13,7 @@ parameters:
       cloudscale-csi-plugin:
         registry: quay.io
         repository: cloudscalech/cloudscale-csi-plugin
-        tag: v3.6.0
+        tag: v3.6.1
 
     api_token: ?{vaultkv:${cluster:tenant}/${cluster:name}/cloudscale/token}
     api_token_secret_name: cloudscale
