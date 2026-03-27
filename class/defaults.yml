@@ -7,7 +7,7 @@ parameters:
     charts:
       csi-cloudscale:
         source: https://cloudscale-ch.github.io/csi-cloudscale
-        version: 1.4.0
+        version: 1.4.1
 
     images:
       cloudscale-csi-plugin:
