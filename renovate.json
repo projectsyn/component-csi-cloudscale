@@ -37,6 +37,10 @@
         "automerge",
         "bump:patch"
       ]
+    },
+    {
+      "matchPackageNames": ["csi-cloudscale", "quay.io/cloudscalech/cloudscale-csi-plugin"],
+      "groupName": "dependency Cloudscale CSI"
     }
   ]
 }
