@@ -40,7 +40,7 @@
     },
     {
       "matchPackageNames": ["csi-cloudscale", "quay.io/cloudscalech/cloudscale-csi-plugin"],
-      "groupName": "dependency Grafana"
+      "groupName": "dependency Cloudscale CSI"
     }
   ]
 }
