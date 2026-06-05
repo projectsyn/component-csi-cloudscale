@@ -1,0 +1,11 @@
+= Upgrade from 4.x to 5.x
+
+This guide describes the steps to perform an upgrade of the component from version 4.x to 5.x.
+
+== Migration guide
+
+This release requires Kubernetes VolumeSnapshot CRDs and the external snapshot controller to be installed before installing or upgrading this driver.
+Clusters without these components must install them first.
+Otherwise, snapshot-related operations and the snapshot resource in the Helm chart will fail to work.
+
+See https://github.com/cloudscale-ch/csi-cloudscale/blob/master/CHANGELOG.md#v400---20260330[Cloudscale CSI Changelog].
