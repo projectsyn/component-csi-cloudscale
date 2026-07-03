@@ -70,13 +70,18 @@ local warnDeprecatedParam(o) =
     o;
 
 {
-  [if params.namespace != 'kube-system' then '00_namespace']: kube.Namespace(params.namespace) + if isOpenshift then {
+  [if params.namespace != 'kube-system' then '00_namespace']: kube.Namespace(params.namespace) {
     metadata+: {
       annotations+: {
         'openshift.io/node-selector': '',
       },
+      labels+: {
+        'pod-security.kubernetes.io/audit': 'privileged',
+        'pod-security.kubernetes.io/enforce': 'privileged',
+        'pod-security.kubernetes.io/warn': 'privileged',
+      },
     },
-  } else {},
+  },
   '01_storageclasses': std.flattenArrays(storageclasses),
   '02_secret': warnDeprecatedParam(secret),
   [if std.length(customRBAC) > 0 then '30_custom_rbac']: customRBAC,
